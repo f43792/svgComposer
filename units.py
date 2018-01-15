@@ -28,8 +28,17 @@ AUTHOR_EMAIL = 'f43792@gmail.com'
 CYEAR = '2018-2020'
 REPO = 'https://github.com/f43792/svgComposer.git'
 
+# "1pt" equals "1.25px" (and therefore 1.25 user units)
+# "1pc" equals "15px" (and therefore 15 user units)
+# "1mm" would be "3.543307px" (3.543307 user units)
+# "1cm" equals "35.43307px" (and therefore 35.43307 user units)
+# "1in" equals "90px" (and therefore 90 user units)
+
 MM = 3.543307
 M = MM * 1000
+CM = MM * 10
+PT = 1.25
+IN = 90
 
 def mm(value):
     _mm = MM
@@ -38,3 +47,15 @@ def mm(value):
 def m(value):
     _m = MM
     return value * _m
+
+def cm(value):
+    _cm = CM
+    return value * _cm
+
+def pt(value):
+    _pt = PT
+    return value * _pt
+
+def inches(value):
+    _in = IN
+    return value * _in

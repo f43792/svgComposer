@@ -1,11 +1,11 @@
 from svgcomposer import Composer
-from units import m, mm
+from units import m, mm, inches
 
 cps = Composer()
 
-t = cps.add_svg_file('rsc/template.svg', 'tem')
-r = cps.add_svg_file('rsc/rect.svg', 'rec')
+base = cps.add_svg_file('rsc/template.svg', 'base')
+logo = cps.add_svg_file('rsc/svg-w3c-v.svg', 'logo')
 
-r.moveto(mm(40), 0)
+logo.moveto(mm(40), inches(2))
 
 cps.save('rsc/merged.svg')
