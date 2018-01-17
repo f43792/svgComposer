@@ -20,7 +20,7 @@ Features:
     - Easy real <-> scale translation
 """
 
-version = (0, 0, 11)  # also update setup.py
+version = (0, 0, 2)  # also update setup.py
 VERSION = '{0}.{1}.{2}'.format(version[0], version[1], version[2])
 
 AUTHOR_NAME = 'Fabio Cesar do Nascimento'
@@ -28,34 +28,77 @@ AUTHOR_EMAIL = 'f43792@gmail.com'
 CYEAR = '2018-2020'
 REPO = 'https://github.com/f43792/svgComposer.git'
 
-# "1pt" equals "1.25px" (and therefore 1.25 user units)
-# "1pc" equals "15px" (and therefore 15 user units)
-# "1mm" would be "3.543307px" (3.543307 user units)
-# "1cm" equals "35.43307px" (and therefore 35.43307 user units)
-# "1in" equals "90px" (and therefore 90 user units)
+# SCALE = 1.0 # Scale of real size object to svg
 
-MM = 3.543307
-M = MM * 1000
-CM = MM * 10
-PT = 1.25
-IN = 90
+# def mm(value):
+#     _mm = _MM
+#     return value * _mm * SCALE
 
-def mm(value):
-    _mm = MM
-    return value * _mm
+# def m(value):
+#     _m = _M
+#     return value * _m * SCALE
 
-def m(value):
-    _m = MM
-    return value * _m
+# def cm(value):
+#     _cm = _CM
+#     return value * _cm * SCALE
 
-def cm(value):
-    _cm = CM
-    return value * _cm
+# def pt(value):
+#     _pt = _PT
+#     return value * _pt * SCALE
 
-def pt(value):
-    _pt = PT
-    return value * _pt
+# def inches(value):
+#     _in = _IN
+#     return value * _in * SCALE
 
-def inches(value):
-    _in = IN
-    return value * _in
+# def px(value):
+#     _px = _PX
+#     return value * _px
+
+class Unit(object):
+    """ Class to handle unit convertions. Result is always in pixels (px)  """
+    _IN = 96 # Inkscape 0.92 changed to 96 pixel per Inche (was 90/in)
+    _MM = _IN / 25.4 #3.7795275590551181102362204724409
+    _M = _MM * 1000
+    _CM = _MM * 10
+    _PT = 1.33333333333333
+    _PX = 1
+
+    _RATIOS = { 'in': _IN,
+                'mm': _MM,
+                'm' : _M,
+                'cm': _CM,
+                'pt': _PT,
+                'px': _PX
+                }
+
+    def __init__(self, unitStr='mm', scale=1.0):
+        self._scale = scale
+        unitStr = unitStr.lower()
+        try:
+            self._ratio = self._RATIOS[unitStr]
+        except:
+            print('Unknow lenght unit.')
+            raise
+
+    def __rmul__(self, value):
+        """ Return the value multiplied by ratio __ """
+        return value * self._ratio * self._scale
+
+    def __call__(self, values):
+        """ When called, multiply the arguments by ratio """
+        if (type(values) == tuple or type(values) == list):
+            res = []
+            for v in values:
+                res.append(v * self._ratio * self._scale)
+            if type(values) == tuple:
+                res = tuple(res)
+            return res
+        else:
+            return values * self._ratio * self._scale
+
+mm = Unit('mm')
+m = Unit('m')
+cm = Unit('cm')
+inches = Unit('in')
+pt = Unit('pt')
+px = Unit('px')
