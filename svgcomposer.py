@@ -61,6 +61,7 @@ class Composer(object):
             return self.__SVGS[objname]
         else:
             print('File {fl} not found.'.format(fl=svgfile))
+            return None
 
     def save(self, filename):
         """ 
